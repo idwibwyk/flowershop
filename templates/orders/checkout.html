@@ -2,7 +2,7 @@
 {% load static %}
 {% load crispy_forms_tags %}
 
-{% block title %}Оформление заказа - Цветочный магазин "Роза"{% endblock %}
+{% block title %}Оформление заказа - Flowlow{% endblock %}
 
 {% block content %}
 <div class="container py-5">
@@ -114,7 +114,7 @@ document.addEventListener('DOMContentLoaded', function() {
         // Очищаем предыдущие ошибки
         clearFormErrors(this);
         
-        fetch('{% url "checkout" %}', {
+        fetch('/orders/checkout/', {
             method: 'POST',
             body: formData,
             headers: {
@@ -127,7 +127,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 showAlert('success', data.message);
                 // Перенаправляем в личный кабинет
                 setTimeout(() => {
-                    window.location.href = '{% url "profile" %}';
+                    window.location.href = data.redirect || '/auth/profile/';
                 }, 2000);
             } else {
                 showFormErrors(this, data.errors);

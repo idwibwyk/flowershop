@@ -6,11 +6,11 @@ body {
 
 .navbar-brand {
     font-size: 1.5rem;
-    color: #dc3545 !important;
+    color: #e91e63 !important;
 }
 
 .navbar-brand:hover {
-    color: #c82333 !important;
+    color: #c2185b !important;
 }
 
 /* Слайдер */
@@ -50,34 +50,34 @@ body {
 .product-price {
     font-size: 1.25rem;
     font-weight: bold;
-    color: #dc3545;
+    color: #e91e63;
 }
 
 /* Кнопки */
 .btn-primary {
-    background-color: #dc3545;
-    border-color: #dc3545;
+    background-color: #e91e63;
+    border-color: #e91e63;
 }
 
 .btn-primary:hover {
-    background-color: #c82333;
-    border-color: #c82333;
+    background-color: #c2185b;
+    border-color: #c2185b;
 }
 
 .btn-outline-primary {
-    color: #dc3545;
-    border-color: #dc3545;
+    color: #e91e63;
+    border-color: #e91e63;
 }
 
 .btn-outline-primary:hover {
-    background-color: #dc3545;
-    border-color: #dc3545;
+    background-color: #e91e63;
+    border-color: #e91e63;
 }
 
 /* Формы */
 .form-control:focus {
-    border-color: #dc3545;
-    box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25);
+    border-color: #e91e63;
+    box-shadow: 0 0 0 0.2rem rgba(233, 30, 99, 0.25);
 }
 
 /* Корзина */
@@ -99,7 +99,7 @@ body {
 
 /* Заказы */
 .order-card {
-    border-left: 4px solid #dc3545;
+    border-left: 4px solid #e91e63;
     margin-bottom: 1rem;
 }
 
@@ -116,7 +116,7 @@ body {
 }
 
 .order-status.cancelled {
-    color: #dc3545;
+    color: #e91e63;
 }
 
 /* Контакты */
@@ -128,7 +128,7 @@ body {
 }
 
 .contact-info i {
-    color: #dc3545;
+    color: #e91e63;
     margin-right: 10px;
 }
 

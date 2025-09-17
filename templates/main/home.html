@@ -1,7 +1,7 @@
 {% extends 'base.html' %}
 {% load static %}
 
-{% block title %}Главная - Цветочный магазин "Роза"{% endblock %}
+{% block title %}Главная - Flowlow{% endblock %}
 
 {% block content %}
 <!-- Слайдер -->
@@ -26,7 +26,7 @@
             </div>
         {% empty %}
             <div class="carousel-item active">
-                <img src="{% static 'images/default-slider.jpg' %}" class="d-block w-100" alt="Цветочный магазин">
+                <img src="{% static 'images/default-slider.jpg' %}" class="d-block w-180" alt="Цветочный магазин">
                 <div class="carousel-caption d-none d-md-block">
                     <h2>Добро пожаловать в наш цветочный магазин!</h2>
                     <p>Создаем красоту для ваших особенных моментов</p>
@@ -48,9 +48,9 @@
     <div class="container">
         <div class="row justify-content-center text-center">
             <div class="col-lg-8">
-                <h1 class="display-4 fw-bold text-danger mb-4">
-                    <i class="fas fa-rose me-3"></i>
-                    Цветы - это язык души
+                <h1 class="display-4 fw-bold mb-4" style="color: #e91e63;">
+                    <i class="fas fa-rose me-3" style="color: #e91e63 !important;"></i>
+                    Flowlow — ваше настроение в потоке цветов
                 </h1>
                 <p class="lead text-muted">
                     Мы создаем неповторимые букеты и композиции, которые помогут вам выразить свои чувства 
@@ -78,8 +78,8 @@
         <div class="row">
             <div class="col-lg-4 col-md-6 mb-4">
                 <div class="text-center">
-                    <div class="bg-danger text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" 
-                         style="width: 80px; height: 80px;">
+                    <div class="text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" 
+                         style="width: 80px; height: 80px; background-color: #e91e63;">
                         <i class="fas fa-truck fa-2x"></i>
                     </div>
                     <h4>Быстрая доставка</h4>
@@ -88,8 +88,8 @@
             </div>
             <div class="col-lg-4 col-md-6 mb-4">
                 <div class="text-center">
-                    <div class="bg-danger text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" 
-                         style="width: 80px; height: 80px;">
+                    <div class="text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" 
+                         style="width: 80px; height: 80px; background-color: #e91e63;">
                         <i class="fas fa-leaf fa-2x"></i>
                     </div>
                     <h4>Свежие цветы</h4>
@@ -98,8 +98,8 @@
             </div>
             <div class="col-lg-4 col-md-6 mb-4">
                 <div class="text-center">
-                    <div class="bg-danger text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" 
-                         style="width: 80px; height: 80px;">
+                    <div class="text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" 
+                         style="width: 80px; height: 80px; background-color: #e91e63;">
                         <i class="fas fa-heart fa-2x"></i>
                     </div>
                     <h4>Индивидуальный подход</h4>
@@ -120,70 +120,37 @@
             </div>
         </div>
         <div class="row">
-            <div class="col-lg-3 col-md-6 mb-4">
-                <div class="card product-card h-100">
-                    <img src="{% static 'images/roses.jpg' %}" class="card-img-top" alt="Розы">
-                    <div class="card-body d-flex flex-column">
-                        <h5 class="card-title">Букет роз</h5>
-                        <p class="card-text text-muted">Классический букет из 25 красных роз</p>
-                        <div class="mt-auto">
-                            <div class="product-price mb-3">2 500 ₽</div>
-                            <button class="btn btn-primary w-100 add-to-cart" data-product-id="1">
-                                <i class="fas fa-shopping-cart me-2"></i>
-                                В корзину
-                            </button>
+            {% for product in popular_products %}
+                <div class="col-lg-3 col-md-6 mb-4">
+                    <div class="card product-card h-100">
+                        <a href="{% url 'product_detail' product.id %}">
+                            <img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.name }}">
+                        </a>
+                        <div class="card-body d-flex flex-column">
+                            <h5 class="card-title">
+                                <a href="{% url 'product_detail' product.id %}" class="text-decoration-none text-dark">
+                                    {{ product.name }}
+                                </a>
+                            </h5>
+                            <p class="card-text text-muted">{{ product.description|truncatewords:10 }}</p>
+                            <div class="mt-auto">
+                                <div class="product-price mb-3">{{ product.price }} ₽</div>
+                                {% if product.stock_quantity > 0 %}
+                                    <button class="btn btn-primary w-100 add-to-cart" data-product-id="{{ product.id }}">
+                                        <i class="fas fa-shopping-cart me-2"></i>
+                                        В корзину
+                                    </button>
+                                {% else %}
+                                    <button class="btn btn-secondary w-100" disabled>
+                                        <i class="fas fa-times me-2"></i>
+                                        Нет в наличии
+                                    </button>
+                                {% endif %}
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
-            <div class="col-lg-3 col-md-6 mb-4">
-                <div class="card product-card h-100">
-                    <img src="{% static 'images/tulips.jpg' %}" class="card-img-top" alt="Тюльпаны">
-                    <div class="card-body d-flex flex-column">
-                        <h5 class="card-title">Тюльпаны</h5>
-                        <p class="card-text text-muted">Яркий букет из разноцветных тюльпанов</p>
-                        <div class="mt-auto">
-                            <div class="product-price mb-3">1 800 ₽</div>
-                            <button class="btn btn-primary w-100 add-to-cart" data-product-id="2">
-                                <i class="fas fa-shopping-cart me-2"></i>
-                                В корзину
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-3 col-md-6 mb-4">
-                <div class="card product-card h-100">
-                    <img src="{% static 'images/lilies.jpg' %}" class="card-img-top" alt="Лилии">
-                    <div class="card-body d-flex flex-column">
-                        <h5 class="card-title">Лилии</h5>
-                        <p class="card-text text-muted">Элегантные белые лилии с зеленью</p>
-                        <div class="mt-auto">
-                            <div class="product-price mb-3">2 200 ₽</div>
-                            <button class="btn btn-primary w-100 add-to-cart" data-product-id="3">
-                                <i class="fas fa-shopping-cart me-2"></i>
-                                В корзину
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="col-lg-3 col-md-6 mb-4">
-                <div class="card product-card h-100">
-                    <img src="{% static 'images/mixed.jpg' %}" class="card-img-top" alt="Смешанный букет">
-                    <div class="card-body d-flex flex-column">
-                        <h5 class="card-title">Смешанный букет</h5>
-                        <p class="card-text text-muted">Красочная композиция из разных цветов</p>
-                        <div class="mt-auto">
-                            <div class="product-price mb-3">1 500 ₽</div>
-                            <button class="btn btn-primary w-100 add-to-cart" data-product-id="4">
-                                <i class="fas fa-shopping-cart me-2"></i>
-                                В корзину
-                            </button>
-                        </div>
-                    </div>
-                </div>
-            </div>
+            {% endfor %}
         </div>
         <div class="text-center mt-4">
             <a href="{% url 'catalog' %}" class="btn btn-outline-primary btn-lg">

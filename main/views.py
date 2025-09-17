@@ -6,8 +6,10 @@ from .models import Product, Category, SliderImage, Contact
 def home(request):
     """Главная страница"""
     slider_images = SliderImage.objects.filter(is_active=True).order_by('order')
+    popular_products = Product.objects.filter(is_available=True).order_by('-created_at')[:4]
     context = {
         'slider_images': slider_images,
+        'popular_products': popular_products,
     }
     return render(request, 'main/home.html', context)
 
@@ -45,8 +47,14 @@ def catalog(request):
 def product_detail(request, product_id):
     """Страница товара"""
     product = get_object_or_404(Product, id=product_id, is_available=True)
+    similar_products = Product.objects.filter(
+        category=product.category, 
+        is_available=True
+    ).exclude(id=product.id)[:4]
+    
     context = {
         'product': product,
+        'similar_products': similar_products,
     }
     return render(request, 'main/product_detail.html', context)
 

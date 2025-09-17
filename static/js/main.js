@@ -8,14 +8,14 @@ document.addEventListener('DOMContentLoaded', function() {
     if (loginForm) {
         loginForm.addEventListener('submit', function(e) {
             e.preventDefault();
-            handleFormSubmit(this, '{% url "login" %}');
+            handleFormSubmit(this, '/auth/login/');
         });
     }
     
     if (registerForm) {
         registerForm.addEventListener('submit', function(e) {
             e.preventDefault();
-            handleFormSubmit(this, '{% url "register" %}');
+            handleFormSubmit(this, '/auth/register/');
         });
     }
     

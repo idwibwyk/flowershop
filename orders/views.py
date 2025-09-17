@@ -121,7 +121,7 @@ def checkout(request):
                 cart_items.delete()
                 
                 messages.success(request, 'Заказ успешно оформлен!')
-                return redirect('profile')
+                return JsonResponse({'success': True, 'message': 'Заказ успешно оформлен!', 'redirect': '/auth/profile/'})
     else:
         form = OrderConfirmationForm(request.user)
     
