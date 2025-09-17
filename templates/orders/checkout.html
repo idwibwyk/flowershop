@@ -1,0 +1,148 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load crispy_forms_tags %}
+
+{% block title %}Оформление заказа - Цветочный магазин "Роза"{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row">
+        <div class="col-12 mb-4">
+            <h1 class="fw-bold">Оформление заказа</h1>
+            <p class="text-muted">Подтвердите заказ введя пароль</p>
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col-lg-8">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Товары в заказе</h5>
+                </div>
+                <div class="card-body">
+                    {% for item in cart_items %}
+                        <div class="row align-items-center mb-3">
+                            <div class="col-md-2">
+                                <img src="{{ item.product.image.url }}" 
+                                     class="img-fluid rounded" 
+                                     alt="{{ item.product.name }}"
+                                     style="height: 60px; object-fit: cover;">
+                            </div>
+                            <div class="col-md-4">
+                                <h6 class="mb-1">{{ item.product.name }}</h6>
+                                <small class="text-muted">{{ item.product.category.name }}</small>
+                            </div>
+                            <div class="col-md-2 text-center">
+                                <span>{{ item.quantity }} шт.</span>
+                            </div>
+                            <div class="col-md-2 text-center">
+                                <span>{{ item.product.price }} ₽</span>
+                            </div>
+                            <div class="col-md-2 text-center">
+                                <strong class="text-danger">{{ item.get_total_price }} ₽</strong>
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-lg-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Подтверждение заказа</h5>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <h6>Общая сумма:</h6>
+                        <div class="h4 text-danger">{{ total_price }} ₽</div>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <h6>Количество товаров:</h6>
+                        <div class="text-muted">{{ cart_items|length }} шт.</div>
+                    </div>
+                    
+                    <hr>
+                    
+                    <form method="post" id="checkoutForm">
+                        {% csrf_token %}
+                        <div class="mb-3">
+                            <label for="id_password" class="form-label">Пароль для подтверждения *</label>
+                            <input type="password" 
+                                   class="form-control" 
+                                   id="id_password" 
+                                   name="password" 
+                                   required>
+                            <div class="invalid-feedback" id="password_error"></div>
+                        </div>
+                        
+                        <div class="d-grid gap-2">
+                            <button type="submit" class="btn btn-primary btn-lg">
+                                <i class="fas fa-credit-card me-2"></i>
+                                Сформировать заказ
+                            </button>
+                            <a href="{% url 'cart' %}" class="btn btn-outline-secondary">
+                                <i class="fas fa-arrow-left me-2"></i>
+                                Вернуться в корзину
+                            </a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const checkoutForm = document.getElementById('checkoutForm');
+    
+    checkoutForm.addEventListener('submit', function(e) {
+        e.preventDefault();
+        
+        const formData = new FormData(this);
+        const submitButton = this.querySelector('button[type="submit"]');
+        const originalText = submitButton.innerHTML;
+        
+        // Показываем загрузку
+        submitButton.disabled = true;
+        submitButton.innerHTML = '<i class="fas fa-spinner fa-spin me-2"></i>Обработка...';
+        
+        // Очищаем предыдущие ошибки
+        clearFormErrors(this);
+        
+        fetch('{% url "checkout" %}', {
+            method: 'POST',
+            body: formData,
+            headers: {
+                'X-CSRFToken': getCookie('csrftoken')
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                showAlert('success', data.message);
+                // Перенаправляем в личный кабинет
+                setTimeout(() => {
+                    window.location.href = '{% url "profile" %}';
+                }, 2000);
+            } else {
+                showFormErrors(this, data.errors);
+            }
+        })
+        .catch(error => {
+            console.error('Error:', error);
+            showAlert('danger', 'Произошла ошибка при оформлении заказа');
+        })
+        .finally(() => {
+            submitButton.disabled = false;
+            submitButton.innerHTML = originalText;
+        });
+    });
+});
+</script>
+{% endblock %}
+

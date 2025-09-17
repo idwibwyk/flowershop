@@ -1,0 +1,154 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Корзина - Цветочный магазин "Роза"{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row">
+        <div class="col-12 mb-4">
+            <h1 class="fw-bold">Корзина</h1>
+            <p class="text-muted">Товары, которые вы выбрали</p>
+        </div>
+    </div>
+    
+    {% if cart_items %}
+        <div class="row">
+            <div class="col-lg-8">
+                <div class="card">
+                    <div class="card-body">
+                        {% for item in cart_items %}
+                            <div class="cart-item" data-cart-item-id="{{ item.id }}">
+                                <div class="row align-items-center">
+                                    <div class="col-md-2">
+                                        <img src="{{ item.product.image.url }}" 
+                                             class="img-fluid rounded" 
+                                             alt="{{ item.product.name }}"
+                                             style="height: 80px; object-fit: cover;">
+                                    </div>
+                                    <div class="col-md-4">
+                                        <h6 class="mb-1">
+                                            <a href="{% url 'product_detail' item.product.id %}" 
+                                               class="text-decoration-none text-dark">
+                                                {{ item.product.name }}
+                                            </a>
+                                        </h6>
+                                        <p class="text-muted small mb-0">{{ item.product.category.name }}</p>
+                                        <p class="text-muted small mb-0">
+                                            <i class="fas fa-tag me-1"></i>
+                                            {{ item.product.country }}, {{ item.product.year }} г.
+                                        </p>
+                                    </div>
+                                    <div class="col-md-2">
+                                        <div class="text-center">
+                                            <label for="quantity_{{ item.id }}" class="form-label small">Количество:</label>
+                                            <input type="number" 
+                                                   class="form-control form-control-sm quantity-input" 
+                                                   id="quantity_{{ item.id }}"
+                                                   value="{{ item.quantity }}" 
+                                                   min="1" 
+                                                   max="{{ item.product.stock_quantity }}"
+                                                   data-cart-item-id="{{ item.id }}">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-2 text-center">
+                                        <div class="h6 text-danger mb-0">{{ item.product.price }} ₽</div>
+                                        <small class="text-muted">за шт.</small>
+                                    </div>
+                                    <div class="col-md-2 text-center">
+                                        <div class="h5 text-danger mb-2">{{ item.get_total_price }} ₽</div>
+                                        <button class="btn btn-outline-danger btn-sm remove-from-cart" 
+                                                data-cart-item-id="{{ item.id }}">
+                                            <i class="fas fa-trash"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+            
+            <div class="col-lg-4">
+                <div class="card cart-total">
+                    <div class="card-body">
+                        <h5 class="card-title">Итого</h5>
+                        
+                        <div class="d-flex justify-content-between mb-2">
+                            <span>Товаров:</span>
+                            <span>{{ cart_items|length }} шт.</span>
+                        </div>
+                        
+                        <div class="d-flex justify-content-between mb-3">
+                            <span>Общая сумма:</span>
+                            <span class="h5 text-danger">{{ total_price }} ₽</span>
+                        </div>
+                        
+                        <hr>
+                        
+                        <div class="d-grid gap-2">
+                            <a href="{% url 'checkout' %}" class="btn btn-primary btn-lg">
+                                <i class="fas fa-credit-card me-2"></i>
+                                Оформить заказ
+                            </a>
+                            <a href="{% url 'catalog' %}" class="btn btn-outline-primary">
+                                <i class="fas fa-shopping-bag me-2"></i>
+                                Продолжить покупки
+                            </a>
+                        </div>
+                        
+                        <div class="mt-3">
+                            <small class="text-muted">
+                                <i class="fas fa-info-circle me-1"></i>
+                                Минимальная сумма заказа: 1000 ₽
+                            </small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    {% else %}
+        <div class="text-center py-5">
+            <i class="fas fa-shopping-cart fa-4x text-muted mb-4"></i>
+            <h3>Корзина пуста</h3>
+            <p class="text-muted mb-4">Добавьте товары из каталога, чтобы оформить заказ</p>
+            <a href="{% url 'catalog' %}" class="btn btn-primary btn-lg">
+                <i class="fas fa-shopping-bag me-2"></i>
+                Перейти в каталог
+            </a>
+        </div>
+    {% endif %}
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    // Обработка изменения количества
+    const quantityInputs = document.querySelectorAll('.quantity-input');
+    quantityInputs.forEach(input => {
+        input.addEventListener('change', function() {
+            const cartItemId = this.dataset.cartItemId;
+            const quantity = this.value;
+            
+            if (quantity < 1) {
+                this.value = 1;
+                return;
+            }
+            
+            updateCartItem(cartItemId, quantity);
+        });
+    });
+    
+    // Обработка удаления товара
+    const removeButtons = document.querySelectorAll('.remove-from-cart');
+    removeButtons.forEach(button => {
+        button.addEventListener('click', function() {
+            const cartItemId = this.dataset.cartItemId;
+            removeFromCart(cartItemId);
+        });
+    });
+});
+</script>
+{% endblock %}
+

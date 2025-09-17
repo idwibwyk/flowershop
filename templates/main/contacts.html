@@ -1,0 +1,155 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Контакты - Цветочный магазин "Роза"{% endblock %}
+
+{% block content %}
+<div class="container py-5">
+    <div class="row">
+        <div class="col-12 mb-4">
+            <h1 class="fw-bold">Контакты</h1>
+            <p class="text-muted">Свяжитесь с нами любым удобным способом</p>
+        </div>
+    </div>
+    
+    <div class="row">
+        <!-- Контактная информация -->
+        <div class="col-lg-6 mb-4">
+            <div class="contact-info">
+                <h3 class="fw-bold mb-4">Наши контакты</h3>
+                
+                <div class="mb-4">
+                    <h5><i class="fas fa-map-marker-alt"></i> Адрес</h5>
+                    <p class="text-muted">
+                        {% if contact_info %}
+                            {{ contact_info.address }}
+                        {% else %}
+                            г. Москва, ул. Цветочная, д. 15<br>
+                            ТЦ "Роза", 1 этаж, павильон 12
+                        {% endif %}
+                    </p>
+                </div>
+                
+                <div class="mb-4">
+                    <h5><i class="fas fa-phone"></i> Телефон</h5>
+                    <p class="text-muted">
+                        {% if contact_info %}
+                            <a href="tel:{{ contact_info.phone }}" class="text-decoration-none">
+                                {{ contact_info.phone }}
+                            </a>
+                        {% else %}
+                            <a href="tel:+7(495)123-45-67" class="text-decoration-none">
+                                +7 (495) 123-45-67
+                            </a>
+                        {% endif %}
+                    </p>
+                </div>
+                
+                <div class="mb-4">
+                    <h5><i class="fas fa-envelope"></i> Email</h5>
+                    <p class="text-muted">
+                        {% if contact_info %}
+                            <a href="mailto:{{ contact_info.email }}" class="text-decoration-none">
+                                {{ contact_info.email }}
+                            </a>
+                        {% else %}
+                            <a href="mailto:info@roza-flowers.ru" class="text-decoration-none">
+                                info@roza-flowers.ru
+                            </a>
+                        {% endif %}
+                    </p>
+                </div>
+                
+                <div class="mb-4">
+                    <h5><i class="fas fa-clock"></i> Режим работы</h5>
+                    <p class="text-muted">
+                        Пн-Пт: 9:00 - 21:00<br>
+                        Сб-Вс: 10:00 - 20:00
+                    </p>
+                </div>
+                
+                <div class="mb-4">
+                    <h5><i class="fas fa-truck"></i> Доставка</h5>
+                    <p class="text-muted">
+                        Доставляем по всему городу в течение 2 часов<br>
+                        Минимальная сумма заказа: 1000 ₽<br>
+                        Стоимость доставки: 300 ₽
+                    </p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Карта -->
+        <div class="col-lg-6 mb-4">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="mb-0">Как нас найти</h5>
+                </div>
+                <div class="card-body p-0">
+                    {% if contact_info and contact_info.map_image %}
+                        <img src="{{ contact_info.map_image.url }}" class="img-fluid" alt="Карта" style="width: 100%; height: 400px; object-fit: cover;">
+                    {% else %}
+                        <div class="d-flex align-items-center justify-content-center bg-light" style="height: 400px;">
+                            <div class="text-center">
+                                <i class="fas fa-map fa-3x text-muted mb-3"></i>
+                                <h5 class="text-muted">Карта будет добавлена</h5>
+                                <p class="text-muted">Скоро здесь появится интерактивная карта</p>
+                            </div>
+                        </div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Дополнительная информация -->
+    <div class="row mt-5">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <h3 class="fw-bold mb-4">Почему выбирают нас?</h3>
+                    <div class="row">
+                        <div class="col-md-4 mb-3">
+                            <div class="d-flex align-items-start">
+                                <div class="bg-danger text-white rounded-circle d-flex align-items-center justify-content-center me-3" 
+                                     style="width: 50px; height: 50px; min-width: 50px;">
+                                    <i class="fas fa-leaf"></i>
+                                </div>
+                                <div>
+                                    <h6 class="fw-bold">Свежие цветы</h6>
+                                    <p class="text-muted small mb-0">Работаем только с проверенными поставщиками</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <div class="d-flex align-items-start">
+                                <div class="bg-danger text-white rounded-circle d-flex align-items-center justify-content-center me-3" 
+                                     style="width: 50px; height: 50px; min-width: 50px;">
+                                    <i class="fas fa-truck"></i>
+                                </div>
+                                <div>
+                                    <h6 class="fw-bold">Быстрая доставка</h6>
+                                    <p class="text-muted small mb-0">Доставляем в течение 2 часов</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-4 mb-3">
+                            <div class="d-flex align-items-start">
+                                <div class="bg-danger text-white rounded-circle d-flex align-items-center justify-content-center me-3" 
+                                     style="width: 50px; height: 50px; min-width: 50px;">
+                                    <i class="fas fa-heart"></i>
+                                </div>
+                                <div>
+                                    <h6 class="fw-bold">Индивидуальный подход</h6>
+                                    <p class="text-muted small mb-0">Создаем букеты по вашим пожеланиям</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
