@@ -101,4 +101,26 @@ class LoginForm(AuthenticationForm):
     
     class Meta:
         fields = ['username', 'password']
+    
+    def clean(self):
+        """Кастомная валидация формы авторизации"""
+        username = self.cleaned_data.get('username')
+        password = self.cleaned_data.get('password')
+        
+        if username and password:
+            # Проверяем существование пользователя
+            try:
+                user = User.objects.get(username=username)
+            except User.DoesNotExist:
+                raise ValidationError('Пользователь с таким логином не найден')
+            
+            # Проверяем пароль
+            if not user.check_password(password):
+                raise ValidationError('Неверный пароль')
+            
+            # Проверяем активность пользователя
+            if not user.is_active:
+                raise ValidationError('Аккаунт заблокирован')
+        
+        return self.cleaned_data
 

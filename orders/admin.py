@@ -1,4 +1,5 @@
 from django.contrib import admin
+from django.contrib.admin import actions
 from .models import Order, OrderItem
 
 
@@ -15,8 +16,13 @@ class OrderAdmin(admin.ModelAdmin):
     search_fields = ['user__username', 'user__first_name', 'user__last_name']
     readonly_fields = ['created_at', 'updated_at']
     inlines = [OrderItemInline]
-    actions = ['confirm_orders', 'cancel_orders', 'add_cancellation_reason', 'delete_selected_orders']
+    actions = [actions.delete_selected, 'confirm_orders', 'cancel_orders', 'add_cancellation_reason', 'delete_selected_orders']
     fields = ['user', 'status', 'cancellation_reason', 'created_at', 'updated_at']
+    
+    def get_actions(self, request):
+        """Получить все доступные действия"""
+        actions = super().get_actions(request)
+        return actions
     
     def total_quantity(self, obj):
         return obj.total_quantity
@@ -31,12 +37,14 @@ class OrderAdmin(admin.ModelAdmin):
         updated = queryset.filter(status='new').update(status='confirmed')
         self.message_user(request, f'Подтверждено {updated} заказов.')
     confirm_orders.short_description = "Подтвердить выбранные заказы"
+    confirm_orders.allowed_permissions = ('change',)
     
     def cancel_orders(self, request, queryset):
         """Отменить выбранные заказы"""
         updated = queryset.filter(status__in=['new', 'confirmed']).update(status='cancelled')
         self.message_user(request, f'Отменено {updated} заказов.')
     cancel_orders.short_description = "Отменить выбранные заказы"
+    cancel_orders.allowed_permissions = ('change',)
     
     def add_cancellation_reason(self, request, queryset):
         """Добавить причину отмены для выбранных заказов"""
@@ -55,6 +63,7 @@ class OrderAdmin(admin.ModelAdmin):
                 'action_name': 'add_cancellation_reason',
             })
     add_cancellation_reason.short_description = "Добавить причину отмены"
+    add_cancellation_reason.allowed_permissions = ('change',)
     
     def delete_selected_orders(self, request, queryset):
         """Удалить выбранные заказы"""
@@ -62,6 +71,7 @@ class OrderAdmin(admin.ModelAdmin):
         queryset.delete()
         self.message_user(request, f'Удалено {count} заказов.')
     delete_selected_orders.short_description = "Удалить выбранные заказы"
+    delete_selected_orders.allowed_permissions = ('delete',)
 
 
 @admin.register(OrderItem)
