@@ -17,11 +17,7 @@ def register_view(request):
             login(request, user)
             messages.success(request, 'Регистрация прошла успешно!')
             return redirect('home')
-        else:
-            # Показываем ошибки валидации
-            for field, errors in form.errors.items():
-                for error in errors:
-                    messages.error(request, f"{form.fields[field].label}: {error}")
+        # Ошибки валидации будут показаны в форме
     else:
         form = RegistrationForm()
     
@@ -37,11 +33,7 @@ def login_view(request):
             login(request, user)
             messages.success(request, 'Вы успешно авторизованы!')
             return redirect('home')
-        else:
-            # Показываем ошибки валидации
-            for field, errors in form.errors.items():
-                for error in errors:
-                    messages.error(request, f"{form.fields[field].label}: {error}")
+        # Ошибки валидации будут показаны в форме
     else:
         form = LoginForm()
     

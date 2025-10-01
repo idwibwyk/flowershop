@@ -15,7 +15,7 @@ class OrderAdmin(admin.ModelAdmin):
     search_fields = ['user__username', 'user__first_name', 'user__last_name']
     readonly_fields = ['created_at', 'updated_at']
     inlines = [OrderItemInline]
-    actions = ['confirm_orders', 'cancel_orders', 'add_cancellation_reason']
+    actions = ['confirm_orders', 'cancel_orders', 'add_cancellation_reason', 'delete_selected_orders']
     fields = ['user', 'status', 'cancellation_reason', 'created_at', 'updated_at']
     
     def total_quantity(self, obj):
@@ -55,6 +55,13 @@ class OrderAdmin(admin.ModelAdmin):
                 'action_name': 'add_cancellation_reason',
             })
     add_cancellation_reason.short_description = "Добавить причину отмены"
+    
+    def delete_selected_orders(self, request, queryset):
+        """Удалить выбранные заказы"""
+        count = queryset.count()
+        queryset.delete()
+        self.message_user(request, f'Удалено {count} заказов.')
+    delete_selected_orders.short_description = "Удалить выбранные заказы"
 
 
 @admin.register(OrderItem)
