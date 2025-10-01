@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Category, Product, SliderImage, Contact
+from .models import Category, Product
 
 
 @admin.register(Category)
@@ -23,16 +23,3 @@ class ProductAdmin(admin.ModelAdmin):
             from django.core.exceptions import ValidationError
             raise ValidationError("Цена не может быть отрицательной")
         super().save_model(request, obj, form, change)
-
-
-@admin.register(SliderImage)
-class SliderImageAdmin(admin.ModelAdmin):
-    list_display = ['title', 'is_active', 'order']
-    list_filter = ['is_active']
-    ordering = ['order']
-    list_editable = ['is_active', 'order']
-
-
-@admin.register(Contact)
-class ContactAdmin(admin.ModelAdmin):
-    list_display = ['address', 'phone', 'email']

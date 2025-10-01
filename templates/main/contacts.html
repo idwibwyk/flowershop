@@ -74,59 +74,35 @@
 {% endblock %}
 
 {% block scripts %}
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
 <script>
-function initMap() {
+document.addEventListener('DOMContentLoaded', function() {
     // Координаты офиса (г.Москва, улица Симоновский Вал, 15)
-    const officeLocation = { lat: 55.7558, lng: 37.6176 };
+    const officeLocation = [55.7558, 37.6176];
     
     // Создаем карту
-    const map = new google.maps.Map(document.getElementById("map"), {
-        zoom: 15,
-        center: officeLocation,
-        mapTypeId: google.maps.MapTypeId.ROADMAP
-    });
+    const map = L.map('map').setView(officeLocation, 15);
+    
+    // Добавляем слой OpenStreetMap
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '© OpenStreetMap contributors'
+    }).addTo(map);
     
     // Добавляем маркер
-    const marker = new google.maps.Marker({
-        position: officeLocation,
-        map: map,
-        title: "Flowlow - Цветочный магазин",
-        animation: google.maps.Animation.DROP
-    });
+    const marker = L.marker(officeLocation).addTo(map);
     
-    // Добавляем информационное окно
-    const infoWindow = new google.maps.InfoWindow({
-        content: `
-            <div style="padding: 10px;">
-                <h6 style="margin: 0 0 5px 0; font-weight: bold;">Flowlow</h6>
-                <p style="margin: 0; font-size: 14px;">Цветочный магазин</p>
-                <p style="margin: 5px 0 0 0; font-size: 12px; color: #666;">
-                    г.Москва, улица Симоновский Вал, 15
-                </p>
-            </div>
-        `
-    });
-    
-    // Показываем информационное окно при клике на маркер
-    marker.addListener("click", () => {
-        infoWindow.open(map, marker);
-    });
-    
-    // Показываем информационное окно сразу
-    infoWindow.open(map, marker);
-}
-
-// Загружаем Google Maps API
-function loadGoogleMaps() {
-    const script = document.createElement('script');
-    script.src = 'https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&callback=initMap';
-    script.async = true;
-    script.defer = true;
-    document.head.appendChild(script);
-}
-
-// Инициализируем карту после загрузки страницы
-document.addEventListener('DOMContentLoaded', loadGoogleMaps);
+    // Добавляем всплывающее окно
+    marker.bindPopup(`
+        <div style="padding: 10px;">
+            <h6 style="margin: 0 0 5px 0; font-weight: bold;">Flowlow</h6>
+            <p style="margin: 0; font-size: 14px;">Цветочный магазин</p>
+            <p style="margin: 5px 0 0 0; font-size: 12px; color: #666;">
+                г.Москва, улица Симоновский Вал, 15
+            </p>
+        </div>
+    `).openPopup();
+});
 </script>
 {% endblock %}
 

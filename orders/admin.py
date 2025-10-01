@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import Order, OrderItem, Cart
+from .models import Order, OrderItem
 
 
 class OrderItemInline(admin.TabularInline):
@@ -15,7 +15,7 @@ class OrderAdmin(admin.ModelAdmin):
     search_fields = ['user__username', 'user__first_name', 'user__last_name']
     readonly_fields = ['created_at', 'updated_at']
     inlines = [OrderItemInline]
-    actions = ['confirm_orders', 'cancel_orders']
+    actions = ['confirm_orders', 'cancel_orders', 'add_cancellation_reason']
     fields = ['user', 'status', 'cancellation_reason', 'created_at', 'updated_at']
     
     def total_quantity(self, obj):
@@ -37,6 +37,24 @@ class OrderAdmin(admin.ModelAdmin):
         updated = queryset.filter(status__in=['new', 'confirmed']).update(status='cancelled')
         self.message_user(request, f'Отменено {updated} заказов.')
     cancel_orders.short_description = "Отменить выбранные заказы"
+    
+    def add_cancellation_reason(self, request, queryset):
+        """Добавить причину отмены для выбранных заказов"""
+        if request.POST.get('post'):
+            reason = request.POST.get('cancellation_reason', '')
+            if reason:
+                updated = queryset.filter(status='cancelled').update(cancellation_reason=reason)
+                self.message_user(request, f'Добавлена причина отмены для {updated} заказов.')
+            else:
+                self.message_user(request, 'Причина отмены не может быть пустой.', level='ERROR')
+        else:
+            # Показываем форму для ввода причины
+            from django.shortcuts import render
+            return render(request, 'admin/orders/order/add_cancellation_reason.html', {
+                'orders': queryset,
+                'action_name': 'add_cancellation_reason',
+            })
+    add_cancellation_reason.short_description = "Добавить причину отмены"
 
 
 @admin.register(OrderItem)
@@ -49,13 +67,3 @@ class OrderItemAdmin(admin.ModelAdmin):
         return f"{obj.get_total_price():.2f} руб."
     get_total_price.short_description = 'Общая стоимость'
 
-
-@admin.register(Cart)
-class CartAdmin(admin.ModelAdmin):
-    list_display = ['user', 'product', 'quantity', 'get_total_price', 'created_at']
-    list_filter = ['created_at']
-    search_fields = ['user__username', 'product__name']
-    
-    def get_total_price(self, obj):
-        return f"{obj.get_total_price():.2f} руб."
-    get_total_price.short_description = 'Общая стоимость'

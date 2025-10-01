@@ -1,12 +1,19 @@
 from django.db import models
 from django.contrib.auth.models import User
-from django.core.validators import MinValueValidator
+from django.core.validators import MinValueValidator, RegexValidator
 from django.core.exceptions import ValidationError
 
 
 class Category(models.Model):
     """Модель категории товаров"""
-    name = models.CharField(max_length=100, verbose_name='Название категории')
+    name = models.CharField(
+        max_length=100, 
+        verbose_name='Название категории',
+        validators=[RegexValidator(
+            regex=r'^[а-яА-ЯёЁ0-9\s\-]+$',
+            message='Название может содержать только кириллицу, цифры, пробелы и тире'
+        )]
+    )
     description = models.TextField(blank=True, verbose_name='Описание')
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='Дата создания')
     
@@ -21,7 +28,14 @@ class Category(models.Model):
 
 class Product(models.Model):
     """Модель товара"""
-    name = models.CharField(max_length=200, verbose_name='Название')
+    name = models.CharField(
+        max_length=200, 
+        verbose_name='Название',
+        validators=[RegexValidator(
+            regex=r'^[а-яА-ЯёЁ0-9\s\-]+$',
+            message='Название может содержать только кириллицу, цифры, пробелы и тире'
+        )]
+    )
     description = models.TextField(verbose_name='Описание')
     price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='Цена', validators=[MinValueValidator(0)])
     image = models.ImageField(upload_to='products/', verbose_name='Изображение')
@@ -40,6 +54,12 @@ class Product(models.Model):
             raise ValidationError({'price': 'Цена не может быть отрицательной'})
         if self.stock_quantity < 0:
             raise ValidationError({'stock_quantity': 'Количество на складе не может быть отрицательным'})
+    
+    def save(self, *args, **kwargs):
+        """Автоматическое обновление статуса наличия"""
+        # Обновляем статус наличия в зависимости от количества
+        self.is_available = self.stock_quantity > 0
+        super().save(*args, **kwargs)
     
     class Meta:
         verbose_name = 'Товар'
