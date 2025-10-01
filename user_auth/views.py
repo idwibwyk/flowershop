@@ -16,12 +16,12 @@ def register_view(request):
             user = form.save()
             login(request, user)
             messages.success(request, 'Регистрация прошла успешно!')
-            return JsonResponse({'success': True, 'message': 'Регистрация прошла успешно!'})
+            return redirect('home')
         else:
-            errors = {}
-            for field, field_errors in form.errors.items():
-                errors[field] = field_errors[0]
-            return JsonResponse({'success': False, 'errors': errors})
+            # Показываем ошибки валидации
+            for field, errors in form.errors.items():
+                for error in errors:
+                    messages.error(request, f"{form.fields[field].label}: {error}")
     else:
         form = RegistrationForm()
     
@@ -36,12 +36,12 @@ def login_view(request):
             user = form.get_user()
             login(request, user)
             messages.success(request, 'Вы успешно авторизованы!')
-            return JsonResponse({'success': True, 'message': 'Вы успешно авторизованы!'})
+            return redirect('home')
         else:
-            errors = {}
-            for field, field_errors in form.errors.items():
-                errors[field] = field_errors[0]
-            return JsonResponse({'success': False, 'errors': errors})
+            # Показываем ошибки валидации
+            for field, errors in form.errors.items():
+                for error in errors:
+                    messages.error(request, f"{form.fields[field].label}: {error}")
     else:
         form = LoginForm()
     

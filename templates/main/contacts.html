@@ -21,12 +21,7 @@
                 <div class="mb-4">
                     <h5><i class="fas fa-map-marker-alt"></i> Адрес</h5>
                     <p class="text-muted">
-                        {% if contact_info %}
-                            {{ contact_info.address }}
-                        {% else %}
-                            г. Москва, ул. Цветочная, д. 15<br>
-                            ТЦ "Роза", 1 этаж, павильон 12
-                        {% endif %}
+                        г.Москва, улица Симоновский Вал, 15
                     </p>
                 </div>
                 
@@ -34,7 +29,7 @@
                     <h5><i class="fas fa-phone"></i> Телефон</h5>
                     <p class="text-muted">
                         {% if contact_info %}
-                            <a href="tel:{{ contact_info.phone }}" class="text-decoration-none">
+                            <a href="tel:{{ contact_info.phone }}" class="text-decoration-none text-dark">
                                 {{ contact_info.phone }}
                             </a>
                         {% else %}
@@ -49,31 +44,14 @@
                     <h5><i class="fas fa-envelope"></i> Email</h5>
                     <p class="text-muted">
                         {% if contact_info %}
-                            <a href="mailto:{{ contact_info.email }}" class="text-decoration-none">
+                            <a href="mailto:{{ contact_info.email }}" class="text-decoration-none text-dark">
                                 {{ contact_info.email }}
                             </a>
                         {% else %}
-                            <a href="mailto:info@roza-flowers.ru" class="text-decoration-none">
+                            <a href="mailto:info@roza-flowers.ru" class="text-decoration-none text-dark">
                                 info@roza-flowers.ru
                             </a>
                         {% endif %}
-                    </p>
-                </div>
-                
-                <div class="mb-4">
-                    <h5><i class="fas fa-clock"></i> Режим работы</h5>
-                    <p class="text-muted">
-                        Пн-Пт: 9:00 - 21:00<br>
-                        Сб-Вс: 10:00 - 20:00
-                    </p>
-                </div>
-                
-                <div class="mb-4">
-                    <h5><i class="fas fa-truck"></i> Доставка</h5>
-                    <p class="text-muted">
-                        Доставляем по всему городу в течение 2 часов<br>
-                        Минимальная сумма заказа: 1000 ₽<br>
-                        Стоимость доставки: 300 ₽
                     </p>
                 </div>
             </div>
@@ -83,20 +61,10 @@
         <div class="col-lg-6 mb-4">
             <div class="card">
                 <div class="card-header">
-                    <h5 class="mb-0">Как нас найти</h5>
+                    <h5 class="mb-0">Наше местоположение</h5>
                 </div>
                 <div class="card-body p-0">
-                    {% if contact_info and contact_info.map_image %}
-                        <img src="{{ contact_info.map_image.url }}" class="img-fluid" alt="Карта" style="width: 100%; height: 400px; object-fit: cover;">
-                    {% else %}
-                        <div class="d-flex align-items-center justify-content-center bg-light" style="height: 400px;">
-                            <div class="text-center">
-                                <i class="fas fa-map fa-3x text-muted mb-3"></i>
-                                <h5 class="text-muted">Карта будет добавлена</h5>
-                                <p class="text-muted">Скоро здесь появится интерактивная карта</p>
-                            </div>
-                        </div>
-                    {% endif %}
+                    <div id="map" style="width: 100%; height: 400px;"></div>
                 </div>
             </div>
         </div>
@@ -104,4 +72,62 @@
     
 </div>
 {% endblock %}
+
+{% block scripts %}
+<script>
+function initMap() {
+    // Координаты офиса (г.Москва, улица Симоновский Вал, 15)
+    const officeLocation = { lat: 55.7558, lng: 37.6176 };
+    
+    // Создаем карту
+    const map = new google.maps.Map(document.getElementById("map"), {
+        zoom: 15,
+        center: officeLocation,
+        mapTypeId: google.maps.MapTypeId.ROADMAP
+    });
+    
+    // Добавляем маркер
+    const marker = new google.maps.Marker({
+        position: officeLocation,
+        map: map,
+        title: "Flowlow - Цветочный магазин",
+        animation: google.maps.Animation.DROP
+    });
+    
+    // Добавляем информационное окно
+    const infoWindow = new google.maps.InfoWindow({
+        content: `
+            <div style="padding: 10px;">
+                <h6 style="margin: 0 0 5px 0; font-weight: bold;">Flowlow</h6>
+                <p style="margin: 0; font-size: 14px;">Цветочный магазин</p>
+                <p style="margin: 5px 0 0 0; font-size: 12px; color: #666;">
+                    г.Москва, улица Симоновский Вал, 15
+                </p>
+            </div>
+        `
+    });
+    
+    // Показываем информационное окно при клике на маркер
+    marker.addListener("click", () => {
+        infoWindow.open(map, marker);
+    });
+    
+    // Показываем информационное окно сразу
+    infoWindow.open(map, marker);
+}
+
+// Загружаем Google Maps API
+function loadGoogleMaps() {
+    const script = document.createElement('script');
+    script.src = 'https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&callback=initMap';
+    script.async = true;
+    script.defer = true;
+    document.head.appendChild(script);
+}
+
+// Инициализируем карту после загрузки страницы
+document.addEventListener('DOMContentLoaded', loadGoogleMaps);
+</script>
+{% endblock %}
+
 

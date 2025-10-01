@@ -1,6 +1,7 @@
 from django.db import models
 from django.contrib.auth.models import User
 from django.core.validators import MinValueValidator
+from django.core.exceptions import ValidationError
 
 
 class Category(models.Model):
@@ -22,7 +23,7 @@ class Product(models.Model):
     """Модель товара"""
     name = models.CharField(max_length=200, verbose_name='Название')
     description = models.TextField(verbose_name='Описание')
-    price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='Цена')
+    price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name='Цена', validators=[MinValueValidator(0)])
     image = models.ImageField(upload_to='products/', verbose_name='Изображение')
     category = models.ForeignKey(Category, on_delete=models.CASCADE, verbose_name='Категория')
     country = models.CharField(max_length=100, verbose_name='Страна-производитель')
@@ -32,6 +33,13 @@ class Product(models.Model):
     is_available = models.BooleanField(default=True, verbose_name='В наличии')
     created_at = models.DateTimeField(auto_now_add=True, verbose_name='Дата добавления')
     updated_at = models.DateTimeField(auto_now=True, verbose_name='Дата обновления')
+    
+    def clean(self):
+        """Валидация модели"""
+        if self.price < 0:
+            raise ValidationError({'price': 'Цена не может быть отрицательной'})
+        if self.stock_quantity < 0:
+            raise ValidationError({'stock_quantity': 'Количество на складе не может быть отрицательным'})
     
     class Meta:
         verbose_name = 'Товар'

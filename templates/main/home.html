@@ -48,114 +48,11 @@
     <div class="container">
         <div class="row justify-content-center text-center">
             <div class="col-lg-8">
-                <h1 class="display-4 fw-bold mb-4" style="color: #e91e63;">
-                    <i class="fas fa-rose me-3" style="color: #e91e63 !important;"></i>
+                <h1 class="display-4 fw-bold mb-4" style="color: #d80073;">
+                    <i class="fas fa-rose me-3" style="color: #d80073 !important;"></i>
                     Flowlow — ваше настроение в потоке цветов
-                </h1>
-                <p class="lead text-muted">
-                    Мы создаем неповторимые букеты и композиции, которые помогут вам выразить свои чувства 
-                    и сделать каждый момент особенным. От романтических свиданий до торжественных событий - 
-                    у нас найдется идеальное решение для любого повода.
-                </p>
-                <div class="mt-4">
-                    <a href="{% url 'catalog' %}" class="btn btn-primary btn-lg me-3">
-                        <i class="fas fa-shopping-bag me-2"></i>
-                        Перейти в каталог
-                    </a>
-                    <a href="{% url 'contacts' %}" class="btn btn-outline-primary btn-lg">
-                        <i class="fas fa-phone me-2"></i>
-                        Связаться с нами
-                    </a>
-                </div>
+                </h1>       
             </div>
-        </div>
-    </div>
-</section>
-
-<!-- Преимущества -->
-<section class="py-5">
-    <div class="container">
-        <div class="row">
-            <div class="col-lg-4 col-md-6 mb-4">
-                <div class="text-center">
-                    <div class="text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" 
-                         style="width: 80px; height: 80px; background-color: #e91e63;">
-                        <i class="fas fa-truck fa-2x"></i>
-                    </div>
-                    <h4>Быстрая доставка</h4>
-                    <p class="text-muted">Доставляем цветы по всему городу в течение 2 часов</p>
-                </div>
-            </div>
-            <div class="col-lg-4 col-md-6 mb-4">
-                <div class="text-center">
-                    <div class="text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" 
-                         style="width: 80px; height: 80px; background-color: #e91e63;">
-                        <i class="fas fa-leaf fa-2x"></i>
-                    </div>
-                    <h4>Свежие цветы</h4>
-                    <p class="text-muted">Работаем только с проверенными поставщиками</p>
-                </div>
-            </div>
-            <div class="col-lg-4 col-md-6 mb-4">
-                <div class="text-center">
-                    <div class="text-white rounded-circle d-inline-flex align-items-center justify-content-center mb-3" 
-                         style="width: 80px; height: 80px; background-color: #e91e63;">
-                        <i class="fas fa-heart fa-2x"></i>
-                    </div>
-                    <h4>Индивидуальный подход</h4>
-                    <p class="text-muted">Создаем букеты по вашим пожеланиям</p>
-                </div>
-            </div>
-        </div>
-    </div>
-</section>
-
-<!-- Популярные товары -->
-<section class="py-5 bg-light">
-    <div class="container">
-        <div class="row">
-            <div class="col-12 text-center mb-5">
-                <h2 class="fw-bold">Популярные товары</h2>
-                <p class="text-muted">Наши бестселлеры, которые выбирают чаще всего</p>
-            </div>
-        </div>
-        <div class="row">
-            {% for product in popular_products %}
-                <div class="col-lg-3 col-md-6 mb-4">
-                    <div class="card product-card h-100">
-                        <a href="{% url 'product_detail' product.id %}">
-                            <img src="{{ product.image.url }}" class="card-img-top" alt="{{ product.name }}">
-                        </a>
-                        <div class="card-body d-flex flex-column">
-                            <h5 class="card-title">
-                                <a href="{% url 'product_detail' product.id %}" class="text-decoration-none text-dark">
-                                    {{ product.name }}
-                                </a>
-                            </h5>
-                            <p class="card-text text-muted">{{ product.description|truncatewords:10 }}</p>
-                            <div class="mt-auto">
-                                <div class="product-price mb-3">{{ product.price }} ₽</div>
-                                {% if product.stock_quantity > 0 %}
-                                    <button class="btn btn-primary w-100 add-to-cart" data-product-id="{{ product.id }}">
-                                        <i class="fas fa-shopping-cart me-2"></i>
-                                        В корзину
-                                    </button>
-                                {% else %}
-                                    <button class="btn btn-secondary w-100" disabled>
-                                        <i class="fas fa-times me-2"></i>
-                                        Нет в наличии
-                                    </button>
-                                {% endif %}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            {% endfor %}
-        </div>
-        <div class="text-center mt-4">
-            <a href="{% url 'catalog' %}" class="btn btn-outline-primary btn-lg">
-                Посмотреть все товары
-            </a>
         </div>
     </div>
 </section>

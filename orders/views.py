@@ -113,9 +113,7 @@ def checkout(request):
                         price=cart_item.product.price
                     )
                     
-                    # Уменьшаем количество на складе
-                    cart_item.product.stock_quantity -= cart_item.quantity
-                    cart_item.product.save()
+                    # НЕ уменьшаем количество на складе - это будет происходить только при подтверждении заказа
                 
                 # Очищаем корзину
                 cart_items.delete()

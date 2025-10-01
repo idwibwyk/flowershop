@@ -1,5 +1,7 @@
 from django.db import models
 from django.contrib.auth import get_user_model
+from django.db.models.signals import post_save
+from django.dispatch import receiver
 from main.models import Product
 
 User = get_user_model()
@@ -76,3 +78,17 @@ class Cart(models.Model):
     def get_total_price(self):
         """Общая стоимость элемента корзины"""
         return self.quantity * self.product.price
+
+
+@receiver(post_save, sender=Order)
+def update_stock_on_order_confirmation(sender, instance, created, **kwargs):
+    """Уменьшает количество товаров на складе при подтверждении заказа"""
+    if not created and instance.status == 'confirmed':
+        # Проверяем, не был ли заказ уже подтвержден ранее
+        if Order.objects.filter(id=instance.id, status='confirmed').exists():
+            # Уменьшаем количество товаров на складе
+            for item in instance.orderitem_set.all():
+                item.product.stock_quantity -= item.quantity
+                if item.product.stock_quantity < 0:
+                    item.product.stock_quantity = 0
+                item.product.save()

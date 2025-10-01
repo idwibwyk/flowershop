@@ -15,6 +15,8 @@ class OrderAdmin(admin.ModelAdmin):
     search_fields = ['user__username', 'user__first_name', 'user__last_name']
     readonly_fields = ['created_at', 'updated_at']
     inlines = [OrderItemInline]
+    actions = ['confirm_orders', 'cancel_orders']
+    fields = ['user', 'status', 'cancellation_reason', 'created_at', 'updated_at']
     
     def total_quantity(self, obj):
         return obj.total_quantity
@@ -23,6 +25,18 @@ class OrderAdmin(admin.ModelAdmin):
     def total_price(self, obj):
         return f"{obj.total_price:.2f} руб."
     total_price.short_description = 'Общая стоимость'
+    
+    def confirm_orders(self, request, queryset):
+        """Подтвердить выбранные заказы"""
+        updated = queryset.filter(status='new').update(status='confirmed')
+        self.message_user(request, f'Подтверждено {updated} заказов.')
+    confirm_orders.short_description = "Подтвердить выбранные заказы"
+    
+    def cancel_orders(self, request, queryset):
+        """Отменить выбранные заказы"""
+        updated = queryset.filter(status__in=['new', 'confirmed']).update(status='cancelled')
+        self.message_user(request, f'Отменено {updated} заказов.')
+    cancel_orders.short_description = "Отменить выбранные заказы"
 
 
 @admin.register(OrderItem)

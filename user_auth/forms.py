@@ -12,7 +12,8 @@ class RegistrationForm(forms.ModelForm):
     password = forms.CharField(
         widget=forms.PasswordInput(attrs={'class': 'form-control'}),
         min_length=6,
-        label='Пароль'
+        label='Пароль',
+        help_text='Минимум 6 символов'
     )
     password_repeat = forms.CharField(
         widget=forms.PasswordInput(attrs={'class': 'form-control'}),
@@ -20,18 +21,19 @@ class RegistrationForm(forms.ModelForm):
     )
     rules = forms.BooleanField(
         required=True,
-        label='Согласие с правилами регистрации'
+        label='Согласие с правилами регистрации',
+        widget=forms.CheckboxInput(attrs={'class': 'form-check-input'})
     )
     
     class Meta:
         model = User
         fields = ['first_name', 'last_name', 'patronymic', 'username', 'email']
         widgets = {
-            'first_name': forms.TextInput(attrs={'class': 'form-control'}),
-            'last_name': forms.TextInput(attrs={'class': 'form-control'}),
-            'patronymic': forms.TextInput(attrs={'class': 'form-control'}),
-            'username': forms.TextInput(attrs={'class': 'form-control'}),
-            'email': forms.EmailInput(attrs={'class': 'form-control'}),
+            'first_name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Введите имя'}),
+            'last_name': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Введите фамилию'}),
+            'patronymic': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Введите отчество (необязательно)'}),
+            'username': forms.TextInput(attrs={'class': 'form-control', 'placeholder': 'Введите логин'}),
+            'email': forms.EmailInput(attrs={'class': 'form-control', 'placeholder': 'Введите email'}),
         }
         labels = {
             'first_name': 'Имя',

@@ -16,6 +16,13 @@ class ProductAdmin(admin.ModelAdmin):
     search_fields = ['name', 'model', 'country']
     ordering = ['-created_at']
     list_editable = ['price', 'stock_quantity', 'is_available']
+    
+    def save_model(self, request, obj, form, change):
+        # Валидация цены - не может быть отрицательной
+        if obj.price < 0:
+            from django.core.exceptions import ValidationError
+            raise ValidationError("Цена не может быть отрицательной")
+        super().save_model(request, obj, form, change)
 
 
 @admin.register(SliderImage)

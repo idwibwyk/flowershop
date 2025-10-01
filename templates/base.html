@@ -11,10 +11,10 @@
 </head>
 <body>
     <!-- Навигационное меню -->
-    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <nav class="navbar navbar-expand-lg bg-dark text-light">
         <div class="container">
             <a class="navbar-brand d-flex align-items-center" href="{% url 'home' %}">
-                <img src="{% static 'images/logo.png' %}" alt="Logo" class="rounded-circle me-2" style="width: 40px; height: 40px; object-fit: cover;">
+                <img src="{% static 'images/logo.png' %}" alt="Logo" class="rounded-circle me-2" style="width: 70px; height: 70px; object-fit: cover;">
                 <span class="fw-bold">Flowlow</span>
             </a>
             
@@ -25,13 +25,13 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav me-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'home' %}">Главная</a>
+                        <a class="nav-link text-light" href="{% url 'home' %}">Главная</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'catalog' %}">Каталог</a>
+                        <a class="nav-link text-light" href="{% url 'catalog' %}">Каталог</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="{% url 'contacts' %}">Контакты</a>
+                        <a class="nav-link text-light" href="{% url 'contacts' %}">Контакты</a>
                     </li>
                 </ul>
                 
@@ -57,14 +57,14 @@
                         </li>
                     {% else %}
                         <li class="nav-item">
-                            <button class="btn btn-outline-primary me-2" data-bs-toggle="modal" data-bs-target="#loginModal">
+                            <a class="btn btn-outline-primary me-2" href="{% url 'login' %}">
                                 Авторизация
-                            </button>
+                            </a>
                         </li>
                         <li class="nav-item">
-                            <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#registerModal">
+                            <a class="btn btn-primary" href="{% url 'register' %}">
                                 Регистрация
-                            </button>
+                            </a>
                         </li>
                     {% endif %}
                 </ul>
@@ -104,102 +104,6 @@
         </div>
     </footer>
 
-    <!-- Модальные окна для авторизации и регистрации -->
-    {% if not user.is_authenticated %}
-        <!-- Модальное окно входа -->
-        <div class="modal fade" id="loginModal" tabindex="-1">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">Вход в систему</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                    </div>
-                    <div class="modal-body">
-                        <form id="loginForm">
-                            {% csrf_token %}
-                            <div class="mb-3">
-                                <label for="id_username" class="form-label">Логин</label>
-                                <input type="text" class="form-control" id="id_username" name="username" required>
-                                <div class="invalid-feedback" id="username_error"></div>
-                            </div>
-                            <div class="mb-3">
-                                <label for="id_password" class="form-label">Пароль</label>
-                                <input type="password" class="form-control" id="id_password" name="password" required>
-                                <div class="invalid-feedback" id="password_error"></div>
-                            </div>
-                            <button type="submit" class="btn btn-primary w-100">Войти</button>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Модальное окно регистрации -->
-        <div class="modal fade" id="registerModal" tabindex="-1">
-            <div class="modal-dialog modal-lg">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title">Регистрация</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
-                    </div>
-                    <div class="modal-body">
-                        <form id="registerForm">
-                            {% csrf_token %}
-                            <div class="row">
-                                <div class="col-md-6 mb-3">
-                                    <label for="id_first_name" class="form-label">Имя *</label>
-                                    <input type="text" class="form-control" id="id_first_name" name="first_name" required>
-                                    <div class="invalid-feedback" id="first_name_error"></div>
-                                </div>
-                                <div class="col-md-6 mb-3">
-                                    <label for="id_last_name" class="form-label">Фамилия *</label>
-                                    <input type="text" class="form-control" id="id_last_name" name="last_name" required>
-                                    <div class="invalid-feedback" id="last_name_error"></div>
-                                </div>
-                            </div>
-                            <div class="mb-3">
-                                <label for="id_patronymic" class="form-label">Отчество</label>
-                                <input type="text" class="form-control" id="id_patronymic" name="patronymic">
-                                <div class="invalid-feedback" id="patronymic_error"></div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-6 mb-3">
-                                    <label for="id_username" class="form-label">Логин *</label>
-                                    <input type="text" class="form-control" id="id_username" name="username" required>
-                                    <div class="invalid-feedback" id="username_error"></div>
-                                </div>
-                                <div class="col-md-6 mb-3">
-                                    <label for="id_email" class="form-label">Email *</label>
-                                    <input type="email" class="form-control" id="id_email" name="email" required>
-                                    <div class="invalid-feedback" id="email_error"></div>
-                                </div>
-                            </div>
-                            <div class="row">
-                                <div class="col-md-6 mb-3">
-                                    <label for="id_password" class="form-label">Пароль *</label>
-                                    <input type="password" class="form-control" id="id_password" name="password" required>
-                                    <div class="invalid-feedback" id="password_error"></div>
-                                </div>
-                                <div class="col-md-6 mb-3">
-                                    <label for="id_password_repeat" class="form-label">Повторите пароль *</label>
-                                    <input type="password" class="form-control" id="id_password_repeat" name="password_repeat" required>
-                                    <div class="invalid-feedback" id="password_repeat_error"></div>
-                                </div>
-                            </div>
-                            <div class="mb-3 form-check">
-                                <input type="checkbox" class="form-check-input" id="id_rules" name="rules" required>
-                                <label class="form-check-label" for="id_rules">
-                                    Согласие с правилами регистрации *
-                                </label>
-                                <div class="invalid-feedback" id="rules_error"></div>
-                            </div>
-                            <button type="submit" class="btn btn-primary w-100">Зарегистрироваться</button>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
-    {% endif %}
 
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="{% static 'js/main.js' %}"></script>
