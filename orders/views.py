@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.decorators import login_required, user_passes_test
 from django.contrib import messages
 from django.http import JsonResponse
 from django.views.decorators.http import require_http_methods
@@ -152,3 +152,13 @@ def cancel_order(request, order_id):
     
     messages.success(request, 'Заказ отменен')
     return redirect('profile')
+
+
+@user_passes_test(lambda u: u.is_staff)
+def get_product_price(request, product_id):
+    """Получить цену товара (для админ-панели)"""
+    try:
+        product = Product.objects.get(id=product_id)
+        return JsonResponse({'success': True, 'price': str(product.price)})
+    except Product.DoesNotExist:
+        return JsonResponse({'success': False, 'error': 'Товар не найден'}, status=404)

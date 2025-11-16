@@ -121,6 +121,13 @@ class LoginForm(AuthenticationForm):
             # Проверяем активность пользователя
             if not user.is_active:
                 raise ValidationError('Аккаунт заблокирован')
+            
+            # Устанавливаем пользователя для AuthenticationForm
+            self.user_cache = user
         
         return self.cleaned_data
+    
+    def get_user(self):
+        """Возвращает аутентифицированного пользователя"""
+        return getattr(self, 'user_cache', None)
 

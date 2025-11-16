@@ -5,8 +5,8 @@ from .models import Order, OrderItem
 
 class OrderItemInline(admin.TabularInline):
     model = OrderItem
-    extra = 0
-    readonly_fields = ['product', 'quantity', 'price']
+    extra = 1
+    fields = ['product', 'quantity', 'price']
 
 
 @admin.register(Order)
@@ -16,13 +16,17 @@ class OrderAdmin(admin.ModelAdmin):
     search_fields = ['user__username', 'user__first_name', 'user__last_name']
     readonly_fields = ['created_at', 'updated_at']
     inlines = [OrderItemInline]
-    actions = [actions.delete_selected, 'confirm_orders', 'cancel_orders', 'add_cancellation_reason', 'delete_selected_orders']
-    fields = ['user', 'status', 'cancellation_reason', 'created_at', 'updated_at']
+    actions = [actions.delete_selected, 'confirm_orders', 'cancel_orders']
     
-    def get_actions(self, request):
-        """Получить все доступные действия"""
-        actions = super().get_actions(request)
-        return actions
+    class Media:
+        js = ('admin/js/order_admin.js',)
+    
+    def get_fields(self, request, obj=None):
+        """Показываем поле причины отмены только при редактировании отмененного заказа"""
+        fields = ['user', 'status', 'created_at', 'updated_at']
+        if obj and obj.status == 'cancelled':
+            fields.insert(2, 'cancellation_reason')
+        return fields
     
     def total_quantity(self, obj):
         return obj.total_quantity
@@ -40,47 +44,41 @@ class OrderAdmin(admin.ModelAdmin):
     confirm_orders.allowed_permissions = ('change',)
     
     def cancel_orders(self, request, queryset):
-        """Отменить выбранные заказы"""
-        updated = queryset.filter(status__in=['new', 'confirmed']).update(status='cancelled')
-        self.message_user(request, f'Отменено {updated} заказов.')
-    cancel_orders.short_description = "Отменить выбранные заказы"
-    cancel_orders.allowed_permissions = ('change',)
-    
-    def add_cancellation_reason(self, request, queryset):
-        """Добавить причину отмены для выбранных заказов"""
-        if request.POST.get('post'):
-            reason = request.POST.get('cancellation_reason', '')
-            if reason:
-                updated = queryset.filter(status='cancelled').update(cancellation_reason=reason)
-                self.message_user(request, f'Добавлена причина отмены для {updated} заказов.')
-            else:
+        """Отменить выбранные заказы с указанием причины"""
+        # Проверяем, был ли отправлен POST с причиной отмены
+        if request.POST.get('apply'):
+            # Восстанавливаем queryset из _selected_action, если queryset пустой
+            # (это происходит когда форма отправляется обратно в admin)
+            if not queryset.exists():
+                order_ids = request.POST.getlist('_selected_action')
+                if order_ids:
+                    queryset = Order.objects.filter(id__in=order_ids)
+            
+            reason = request.POST.get('cancellation_reason', '').strip()
+            if not reason:
                 self.message_user(request, 'Причина отмены не может быть пустой.', level='ERROR')
+                # Показываем форму снова с ошибкой
+                from django.shortcuts import render
+                return render(request, 'admin/orders/order/add_cancellation_reason.html', {
+                    'orders': queryset,
+                    'action_name': 'cancel_orders',
+                })
+            
+            # Используем queryset для обновления заказов
+            updated = queryset.filter(status__in=['new', 'confirmed']).update(
+                status='cancelled',
+                cancellation_reason=reason
+            )
+            self.message_user(request, f'Отменено {updated} заказов с указанием причины.')
+            # Возвращаем None - Django автоматически сделает редирект на changelist
+            return None
         else:
-            # Показываем форму для ввода причины
+            # Показываем форму для ввода причины (первый запрос)
             from django.shortcuts import render
             return render(request, 'admin/orders/order/add_cancellation_reason.html', {
                 'orders': queryset,
-                'action_name': 'add_cancellation_reason',
+                'action_name': 'cancel_orders',
             })
-    add_cancellation_reason.short_description = "Добавить причину отмены"
-    add_cancellation_reason.allowed_permissions = ('change',)
-    
-    def delete_selected_orders(self, request, queryset):
-        """Удалить выбранные заказы"""
-        count = queryset.count()
-        queryset.delete()
-        self.message_user(request, f'Удалено {count} заказов.')
-    delete_selected_orders.short_description = "Удалить выбранные заказы"
-    delete_selected_orders.allowed_permissions = ('delete',)
-
-
-@admin.register(OrderItem)
-class OrderItemAdmin(admin.ModelAdmin):
-    list_display = ['order', 'product', 'quantity', 'price', 'get_total_price']
-    list_filter = ['order__status', 'order__created_at']
-    search_fields = ['product__name', 'order__user__username']
-    
-    def get_total_price(self, obj):
-        return f"{obj.get_total_price():.2f} руб."
-    get_total_price.short_description = 'Общая стоимость'
+    cancel_orders.short_description = "Отменить заказ"
+    cancel_orders.allowed_permissions = ('change',)
 

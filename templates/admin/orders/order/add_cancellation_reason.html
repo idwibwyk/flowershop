@@ -1,22 +1,28 @@
 {% extends "admin/base_site.html" %}
 {% load i18n %}
 
-{% block title %}{% trans "Add cancellation reason" %}{% endblock %}
+{% block title %}{% trans "Cancel orders" %}{% endblock %}
 
 {% block content %}
-<h1>{% trans "Add cancellation reason" %}</h1>
+<h1>{% trans "Cancel orders" %}</h1>
 
-<form method="post">
+<form method="post" action="{% url 'admin:orders_order_changelist' %}">
     {% csrf_token %}
+    {% for order in orders %}
+        <input type="hidden" name="_selected_action" value="{{ order.id }}">
+    {% endfor %}
+    <input type="hidden" name="action" value="cancel_orders">
+    
     <div class="form-row">
         <div class="form-group">
             <label for="cancellation_reason">{% trans "Cancellation reason:" %}</label>
             <textarea name="cancellation_reason" id="cancellation_reason" rows="4" cols="50" class="form-control" required></textarea>
+            <p class="help">{% trans "This reason will be visible to the user in their personal account." %}</p>
         </div>
     </div>
     
     <div class="submit-row">
-        <input type="submit" value="{% trans 'Add reason' %}" class="default" name="post">
+        <input type="submit" value="{% trans 'Cancel orders' %}" class="default" name="apply">
         <a href="{% url 'admin:orders_order_changelist' %}" class="button cancel-link">{% trans "Cancel" %}</a>
     </div>
 </form>
@@ -24,7 +30,7 @@
 <h2>{% trans "Selected orders:" %}</h2>
 <ul>
     {% for order in orders %}
-        <li>{% trans "Order" %} #{{ order.id }} - {{ order.user.get_full_name|default:order.user.username }}</li>
+        <li>{% trans "Order" %} #{{ order.id }} - {{ order.user.get_full_name|default:order.user.username }} ({% trans "Status" %}: {{ order.get_status_display }})</li>
     {% endfor %}
 </ul>
 {% endblock %}

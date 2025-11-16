@@ -54,6 +54,12 @@ class OrderItem(models.Model):
     def __str__(self):
         return f"{self.product.name} - {self.quantity} шт."
     
+    def save(self, *args, **kwargs):
+        """Автоматически устанавливаем цену из товара, если она не указана"""
+        if self.product and (self.price is None or self.price == 0):
+            self.price = self.product.price
+        super().save(*args, **kwargs)
+    
     def get_total_price(self):
         """Общая стоимость элемента заказа"""
         return self.quantity * self.price
