@@ -1,0 +1,342 @@
+/* Кастомная админ-панель Flowlow с измененной цветовой схемой */
+
+/* Основные цвета - фиолетово-розовая тема (цветочная) */
+:root {
+    --primary-color: #c395d5;      /* Фиолетовый */
+    --primary-dark: #9656b1;       /* Темно-фиолетовый */
+    --primary-light: #d7bce2;      /* Светло-фиолетовый */
+    --secondary-color: #ad1e6a;    /* Розовый */
+    --accent-color: #f39c12;       /* Оранжевый акцент */
+    --success-color: #27ae60;      /* Зеленый */
+    --danger-color: #e8d3d1;       /* Красный */
+    --warning-color: #f39c12;      /* Оранжевый */
+    --info-color: #3498db;         /* Синий */
+    --bg-color: #f8f9fa;           /* Светло-серый фон */
+    --text-color: #2c3e50;         /* Темно-серый текст */
+    --border-color: #dee2e6;       /* Светло-серый бордер */
+}
+
+/* Заголовок админ-панели */
+#header {
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%) !important;
+    color: #ffffff !important;
+    border-bottom: 3px solid var(--primary-dark) !important;
+}
+
+#header h1 {
+    color: #ffffff !important;
+    font-weight: 600 !important;
+}
+
+#header h1 a {
+    color: #ffffff !important;
+}
+
+#header h1 a:hover {
+    color: var(--primary-light) !important;
+}
+
+/* Навигация пользователя */
+#user-tools {
+    color: #ffffff !important;
+}
+
+#user-tools a {
+    color: #ffffff !important;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.3) !important;
+}
+
+#user-tools a:hover {
+    color: var(--primary-light) !important;
+    border-bottom-color: var(--primary-light) !important;
+}
+
+/* Боковое меню */
+#nav-global {
+    background-color: #ffffff !important;
+    border-right: 1px solid var(--border-color) !important;
+}
+
+.module h2,
+.module caption,
+.inline-group h2 {
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%) !important;
+    color: #ffffff !important;
+    border-bottom: 2px solid var(--primary-dark) !important;
+}
+
+/* Ссылки в меню */
+#nav-global a,
+.module a {
+    color: var(--text-color) !important;
+}
+
+#nav-global a:hover,
+.module a:hover {
+    color: var(--primary-color) !important;
+    background-color: rgba(155, 89, 182, 0.1) !important;
+}
+
+/* Кнопки */
+.button,
+input[type="submit"],
+input[type="button"],
+.submit-row input {
+    background-color: var(--primary-color) !important;
+    border-color: var(--primary-dark) !important;
+    color: #ffffff !important;
+    border-radius: 4px !important;
+    transition: all 0.3s ease !important;
+}
+
+.button:hover,
+input[type="submit"]:hover,
+input[type="button"]:hover {
+    background-color: var(--primary-dark) !important;
+    border-color: var(--primary-dark) !important;
+    transform: translateY(-1px) !important;
+    box-shadow: 0 4px 8px rgba(155, 89, 182, 0.3) !important;
+}
+
+.button.default,
+input[type="submit"].default,
+.submit-row input.default {
+    background-color: var(--secondary-color) !important;
+    border-color: #c2185b !important;
+}
+
+.button.default:hover,
+input[type="submit"].default:hover {
+    background-color: #c2185b !important;
+    box-shadow: 0 4px 8px rgba(233, 30, 99, 0.3) !important;
+}
+
+/* Кнопка удаления */
+.deletelink,
+.deletelink-box a {
+    background-color: var(--danger-color) !important;
+    border-color: #c0392b !important;
+}
+
+.deletelink:hover,
+.deletelink-box a:hover {
+    background-color: #c0392b !important;
+    box-shadow: 0 4px 8px rgba(231, 76, 60, 0.3) !important;
+}
+
+/* Таблицы */
+#result_list thead th {
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%) !important;
+    color: #ffffff !important;
+    border-bottom: 2px solid var(--primary-dark) !important;
+}
+
+#result_list tbody tr:hover {
+    background-color: rgba(155, 89, 182, 0.05) !important;
+}
+
+#result_list tbody tr.selected {
+    background-color: rgba(155, 89, 182, 0.15) !important;
+}
+
+/* Формы */
+.form-row {
+    border-bottom: 1px solid var(--border-color) !important;
+}
+
+.form-row:hover {
+    background-color: rgba(155, 89, 182, 0.02) !important;
+}
+
+input[type="text"],
+input[type="password"],
+input[type="email"],
+input[type="url"],
+input[type="number"],
+textarea,
+select {
+    border: 1px solid var(--border-color) !important;
+    border-radius: 4px !important;
+    transition: border-color 0.3s ease !important;
+}
+
+input[type="text"]:focus,
+input[type="password"]:focus,
+input[type="email"]:focus,
+input[type="url"]:focus,
+input[type="number"]:focus,
+textarea:focus,
+select:focus {
+    border-color: var(--primary-color) !important;
+    box-shadow: 0 0 0 3px rgba(155, 89, 182, 0.1) !important;
+    outline: none !important;
+}
+
+/* Чекбоксы и радиокнопки */
+input[type="checkbox"]:checked,
+input[type="radio"]:checked {
+    accent-color: var(--primary-color) !important;
+}
+
+/* Сообщения */
+.messagelist li {
+    border-left: 4px solid var(--primary-color) !important;
+}
+
+.messagelist li.success {
+    border-left-color: var(--success-color) !important;
+    background-color: rgba(39, 174, 96, 0.1) !important;
+}
+
+.messagelist li.error {
+    border-left-color: var(--danger-color) !important;
+    background-color: rgba(231, 76, 60, 0.1) !important;
+}
+
+.messagelist li.warning {
+    border-left-color: var(--warning-color) !important;
+    background-color: rgba(243, 156, 18, 0.1) !important;
+}
+
+.messagelist li.info {
+    border-left-color: var(--info-color) !important;
+    background-color: rgba(52, 152, 219, 0.1) !important;
+}
+
+/* Фильтры */
+#changelist-filter {
+    background-color: #ffffff !important;
+    border-left: 1px solid var(--border-color) !important;
+}
+
+#changelist-filter h2 {
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%) !important;
+    color: #ffffff !important;
+}
+
+#changelist-filter h3 {
+    color: var(--primary-color) !important;
+    border-bottom: 2px solid var(--primary-light) !important;
+}
+
+#changelist-filter a {
+    color: var(--text-color) !important;
+}
+
+#changelist-filter a:hover,
+#changelist-filter li.selected a {
+    color: var(--primary-color) !important;
+    background-color: rgba(155, 89, 182, 0.1) !important;
+}
+
+/* Поиск */
+#changelist-search {
+    border: 1px solid var(--border-color) !important;
+    border-radius: 4px !important;
+}
+
+#changelist-search:focus {
+    border-color: var(--primary-color) !important;
+    box-shadow: 0 0 0 3px rgba(155, 89, 182, 0.1) !important;
+}
+
+/* Пагинация */
+.paginator a {
+    color: var(--primary-color) !important;
+    border: 1px solid var(--border-color) !important;
+}
+
+.paginator a:hover {
+    background-color: var(--primary-color) !important;
+    color: #ffffff !important;
+    border-color: var(--primary-color) !important;
+}
+
+.paginator a.selected {
+    background-color: var(--primary-color) !important;
+    color: #ffffff !important;
+    border-color: var(--primary-color) !important;
+}
+
+/* Иконки действий */
+.object-tools a {
+    background-color: var(--primary-color) !important;
+    color: #ffffff !important;
+    border-radius: 4px !important;
+}
+
+.object-tools a:hover {
+    background-color: var(--primary-dark) !important;
+    box-shadow: 0 4px 8px rgba(155, 89, 182, 0.3) !important;
+}
+
+.object-tools a.addlink {
+    background-color: var(--success-color) !important;
+}
+
+.object-tools a.addlink:hover {
+    background-color: #229954 !important;
+}
+
+/* Вкладки */
+.tab-group {
+    border-bottom: 2px solid var(--border-color) !important;
+}
+
+.tab-group a {
+    color: var(--text-color) !important;
+}
+
+.tab-group a.selected {
+    color: var(--primary-color) !important;
+    border-bottom: 2px solid var(--primary-color) !important;
+}
+
+.tab-group a:hover {
+    color: var(--primary-color) !important;
+}
+
+/* Inline формы */
+.inline-group {
+    border: 1px solid var(--border-color) !important;
+    border-radius: 4px !important;
+}
+
+.inline-group .tabular {
+    border-top: 2px solid var(--primary-color) !important;
+}
+
+/* Логотип и брендинг */
+#branding {
+    background: linear-gradient(135deg, var(--primary-color) 0%, var(--secondary-color) 100%) !important;
+}
+
+/* Общие улучшения */
+body {
+    background-color: var(--bg-color) !important;
+}
+
+#content {
+    background-color: #ffffff !important;
+    border-radius: 4px !important;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
+}
+
+/* Анимации */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.module,
+.form-row,
+#result_list tbody tr {
+    animation: fadeIn 0.3s ease-in-out;
+}
+
